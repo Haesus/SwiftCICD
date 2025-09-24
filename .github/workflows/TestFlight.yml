@@ -1,0 +1,65 @@
+name: TestFlight CI
+
+on:
+  push:
+    branches: [ "main" ]        # main에 머지되면 배포
+  workflow_dispatch:             # 수동 실행도 허용
+
+jobs:
+  build-and-upload:
+    runs-on: macos-14
+
+    env:
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      ASC_API_KEY_BASE64: ${{ secrets.ASC_API_KEY_BASE64 }}
+      MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
+      MATCH_USERNAME: ${{ secrets.MATCH_USERNAME }}
+      MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+      MATCH_KEYCHAIN_PASSWORD: ${{ secrets.MATCH_KEYCHAIN_PASSWORD }}
+      MATCH_GIT_BRANCH: "master"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2"
+          bundler-cache: true
+
+      - name: Install Fastlane
+        run: |
+          bundle install || gem install fastlane
+
+      - name: (Optional) Setup SSH for match repo
+        if: ${{ secrets.MATCH_SSH_PRIVATE_KEY != '' }}
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.MATCH_SSH_PRIVATE_KEY }}
+
+      - name: Xcode Select (optional)
+        run: |
+          xcodebuild -version
+          # 필요 시 특정 버전 선택: sudo xcode-select -s "/Applications/Xcode_16.0.app"
+
+      - name: Ensure Keychain (for match)
+        run: |
+          security create-keychain -p "$MATCH_KEYCHAIN_PASSWORD" build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p "$MATCH_KEYCHAIN_PASSWORD" build.keychain
+          security set-keychain-settings -lut 21600 build.keychain
+
+      - name: Install Tuist
+        run: |
+          curl -Ls https://install.tuist.io | bash
+          tuist version
+
+      - name: Generate Xcode project with Tuist
+        run: |
+          tuist generate
+
+      - name: Fastlane Beta (Build & Upload)
+        run: |
+          bundle exec fastlane beta

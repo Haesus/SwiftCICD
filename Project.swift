@@ -19,6 +19,7 @@ let project = Project(
             buildableFolders: [
                 "SwiftCICD/Sources",
                 "SwiftCICD/Resources",
+                ".github"
             ],
             dependencies: [],
             settings: .settings(
