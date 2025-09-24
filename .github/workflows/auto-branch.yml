@@ -1,0 +1,88 @@
+name: Create Branch on Issue Creation
+
+on:
+  issues:
+    types: [opened]  # 이슈가 생성될 때 실행됨
+
+jobs:
+  create-branch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Extract Branch Name from Issue Title
+        id: extract_branch_name
+        run: |
+          ISSUE_NUMBER=${{ github.event.issue.number }}
+          ISSUE_TITLE="${{ github.event.issue.title }}"
+
+          # 기본 브랜치 네이밍
+          BRANCH_NAME="issue_#${ISSUE_NUMBER}"
+
+          # 1️⃣ [FEAT]이 포함되면 `dev_#이슈번호` 형식으로 브랜치 생성
+          if echo "$ISSUE_TITLE" | grep -q "^\[FEAT\]"; then
+            BRANCH_NAME="dev_#${ISSUE_NUMBER}"
+          else
+            # 2️⃣ [ ] 안의 값을 추출하여 접두어로 사용 (예: [FIX] → fix_#이슈번호)
+            CATEGORY=$(echo "$ISSUE_TITLE" | grep -oP "(?<=\[).+?(?=\])" | head -n 1)
+
+            if [[ -n "$CATEGORY" ]]; then
+              CATEGORY_LOWER=$(echo "$CATEGORY" | tr '[:upper:]' '[:lower:]')  # 소문자로 변환
+              BRANCH_NAME="${CATEGORY_LOWER}_#${ISSUE_NUMBER}"
+            fi
+          fi
+
+          # 브랜치 이름에서 공백 및 특수문자 제거
+          BRANCH_NAME=$(echo "$BRANCH_NAME" | tr ' ' '-' | tr -cd '[:alnum:]#_-')
+
+          echo "최종 브랜치 이름: $BRANCH_NAME"
+          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+
+      - name: Create Branch and Push
+        run: |
+          git fetch origin main
+          git checkout -b "$BRANCH_NAME" origin/main
+          git push origin "$BRANCH_NAME"
+
+      - name: Comment on Issue
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const issue_number = context.payload.issue.number;
+            const branch_name = process.env.BRANCH_NAME;
+            const messages = [
+              { text: `🦄✨🧚🏻‍♀️ 코드 요정이 마법 지팡이를 흔들더니… ✨ 새로운 브랜치가 나타났습니다! 이름은 바로 \`${branch_name}\`! 어서 가서 모험을 시작하세요!`, weight: 5 },
+              { text: `🤖 로봇이 삐빅- 소리를 내며 브랜치를 생성했습니다. 작업 구역은 \`${branch_name}\`입니다. 인간, 코드를 작성하십시오!`, weight: 4 },
+              { text: `🐶 강아지가 신나게 달려오며 브랜치를 물고 왔습니다! 주운 브랜치 이름은 \`${branch_name}\` 🐾`, weight: 3 },
+              { text: `🐱 고양이가 키보드를 밟다가 실수로… \`${branch_name}\` 브랜치를 만들었어요. 😼`, weight: 3 },
+              { text: `🚀 로켓이 발사되며 남긴 흔적 속에서 \`${branch_name}\` 브랜치가 태어났습니다! 🚀`, weight: 4 },
+              { text: `📚 먼지 쌓인 마법책을 열자 빛과 함께 \`${branch_name}\` 브랜치가 튀어나왔습니다! 📖✨`, weight: 3 },
+              { text: `🎩 마술사가 모자를 휙 열자… 토끼 대신 \`${branch_name}\` 브랜치가 나왔습니다! 🎩🐇`, weight: 2 },
+              { text: `🐧 펭귄이 미끄러지듯 달려와 브랜치를 전해줍니다: \`${branch_name}\` 🐧❄️`, weight: 2 },
+              { text: `💨🌴 나무가 흔들리더니 브랜치가 툭 떨어졌습니다! 그게 바로 \`${branch_name}\` 🌳`, weight: 1 }
+            ];
+
+            function pickWeighted(items) {
+              const total = items.reduce((sum, it) => sum + (it.weight || 1), 0);
+              let r = Math.random() * total;
+              for (const it of items) {
+                r -= (it.weight || 1);
+                if (r < 0) return it.text;
+              }
+              return items[items.length - 1].text; // fallback
+            }
+
+            const body = pickWeighted(messages);
+            github.rest.issues.createComment({
+              issue_number: issue_number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body
+            });

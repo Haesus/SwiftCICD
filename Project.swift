@@ -20,7 +20,13 @@ let project = Project(
                 "SwiftCICD/Sources",
                 "SwiftCICD/Resources",
             ],
-            dependencies: []
+            dependencies: [],
+            settings: .settings(
+                base: [
+                    "CODE_SIGN_STYLE": "Automatic",
+                    "DEVELOPMENT_TEAM": "3TGR3P459K"
+                ]
+            )
         ),
         .target(
             name: "SwiftCICDTests",
@@ -31,7 +37,13 @@ let project = Project(
             buildableFolders: [
                 "SwiftCICD/Tests"
             ],
-            dependencies: [.target(name: "SwiftCICD")]
+            dependencies: [.target(name: "SwiftCICD")],
+            settings: .settings(
+                base: [
+                    "CODE_SIGN_STYLE": "Automatic",
+                    "DEVELOPMENT_TEAM": "3TGR3P459K"
+                ]
+            )
         ),
     ]
 )

@@ -1,0 +1,291 @@
+# ===============================
+# macOS (Finder/Spotlight/TimeMachine 등 시스템 잡파일)
+# ===============================
+.DS_Store
+._.DS_Store
+**/.DS_Store
+**/._.DS_Store
+.AppleDouble
+.LSOverride
+*.icloud
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+.apdisk
+
+# ===============================
+# Xcode & Swift (iOS/macOS 개발 전반)
+# ===============================
+xcuserdata/
+*.xcconfig
+!*.xcconfig.template
+DerivedData/
+build/
+*.hmap
+*.xcscmblueprint
+*.xccheckout
+
+# Xcode 3~4 시대 유물 (대개 필요 없음)
+*.moved-aside
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+
+# ===============================
+# Tuist (iOS 프로젝트 매니저)
+# ===============================
+.tuist/
+Tuist/Derived/
+Tuist/Dependencies/
+*.xcodeproj
+*.xcworkspace
+
+# ===============================
+# iOS 패키징/심볼
+# ===============================
+*.ipa
+*.dSYM
+*.dSYM.zip
+
+# ===============================
+# Swift Playgrounds
+# ===============================
+timeline.xctimeline
+playground.xcworkspace
+
+# ===============================
+# Swift Package Manager (SPM)
+# ===============================
+.build/
+.swiftpm/
+.swiftpm/configuration/registries.json
+.swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
+/Packages
+Package.resolved
+
+# ===============================
+# CocoaPods
+# ===============================
+Pods/
+*.xcworkspace
+
+# ===============================
+# Carthage
+# ===============================
+Carthage/Build/
+# Carthage/Checkouts           # 필요 시 활성화
+
+# ===============================
+# Accio (iOS 의존성 매니저)
+# ===============================
+Dependencies/
+.accio/
+
+# ===============================
+# fastlane (iOS 배포/테스트 자동화)
+# ===============================
+fastlane/
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+
+# ===============================
+# Code Injection for Xcode (개발 중 런타임 코드 주입)
+# ===============================
+iOSInjectionProject/
+
+# ===============================
+# 공통 로그/리포트/런타임(pids)
+# ===============================
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# ===============================
+# JavaScript/TypeScript 생태계 (Node, 웹 번들러 등)
+# ===============================
+node_modules/
+jspm_packages/
+web_modules/
+.cache
+.parcel-cache
+.next
+out
+.nuxt
+dist
+.vuepress/dist
+.temp
+.docusaurus
+.cache/
+coverage
+*.lcov
+.nyc_output
+# TypeScript
+*.tsbuildinfo
+# Microbundle / Rollup TS 캐시
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+# Bower
+bower_components
+# node-waf
+.lock-wscript
+# Addons
+build/Release
+# Snowpack/Legacy
+web_modules/
+# Yarn 2 (Berry) & PnP
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+.yarn-integrity
+# REPL/Pack
+.node_repl_history
+*.tgz
+# ESLint/Stylelint 캐시
+.eslintcache
+.stylelintcache
+# Microbundle cache (중복 보호용 주석)
+# .rpt2_cache/ 등 위에 포함됨
+
+# ===============================
+# Static site / serverless / 기타 도구
+# ===============================
+.serverless/
+.fusebox/
+.dynamodb/
+.tern-port
+.vscode-test
+
+# ===============================
+# 환경 변수/시크릿 (백엔드/프론트 공통)
+# ===============================
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+.env.*
+.netrc
+
+# ===============================
+# Visual Studio / .NET / Windows 빌드 아티팩트
+# ===============================
+bin/
+obj/
+out/
+publish/
+artifacts/
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+x64/
+x86/
+bld/
+[Ll]og/
+[Ll]ogs/
+*.dll
+*.exe
+*.pdb
+*.config
+.vs/
+*.suo
+*.user
+.vsconfig
+.mono/
+project.lock.json
+project.fragment.lock.json
+ScaffoldingReadMe.txt
+# 설정/시크릿 (프로젝트별 정책에 맞게)
+appsettings.json
+appsettings.*.json
+secrets.json
+# NuGet 패키지
+*.nupkg
+*.snupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+
+# ===============================
+# 테스트/리포트/코드 스타일(일부 도구)
+# ===============================
+*.VisualState.xml
+TestResult.xml
+nunit-*.xml
+StyleCopReport.xml
+
+# ===============================
+# Windows 시스템 파일 & 인스톨러
+# ===============================
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+
+# ===============================
+# IDE/에디터 설정 (공유 불필요한 로컬 설정)
+# ===============================
+.vscode/*
+.vscode-server/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.iml
+*.code-workspace
+
+# ===============================
+# 변경 히스토리/로컬 캐시(에디터 플러그인 등)
+# ===============================
+.localhistory/
+.vshistory/
+.history/
+
+# ===============================
+# Node.js API 서버/운영 툴 (pm2 등)
+# ===============================
+# 환경/로그는 위 공통 섹션 참고
+pids
+*.pid
+*.seed
+*.pid.lock
+*~
+
+# ===============================
+# 기타(필요 시 프로젝트 맞춰 조정)
+# ===============================
+# public/           # Gatsby가 아니라 Next.js면 주석 유지
+# Carthage/Checkouts  # 필요 시 주석 해제
+# Packages/           # SPM 소스 커밋 방지용 (정책에 따라)
