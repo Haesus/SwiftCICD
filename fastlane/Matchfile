@@ -21,7 +21,7 @@ storage_mode("git")
 # - adhoc: 테스트 기기 등록용 (내부 테스트용)
 # - enterprise: 엔터프라이즈 배포용
 # - 이 값에 따라 생성/관리되는 인증서 및 프로비저닝 프로파일 유형이 결정됨
-type("appstore")
+type("development")
 
 # 관리할 앱 번들 ID 목록
 # - 예: ["com.company.myapp", "com.company.myapp.extension"]
