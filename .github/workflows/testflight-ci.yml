@@ -54,15 +54,14 @@ jobs:
           security unlock-keychain -p "$MATCH_KEYCHAIN_PASSWORD" build.keychain
           security set-keychain-settings -lut 21600 build.keychain
 
-      - name: Install Tuist
+      - name: Install Tuist (via Homebrew)
         run: |
-          curl -Ls https://install.tuist.io | bash
-          export PATH="$HOME/.tuist/bin:$PATH"; echo "PATH=$PATH" >> $GITHUB_ENV
+          brew tap tuist/tuist
+          brew install --formula tuist
           tuist version
 
       - name: Generate Xcode project with Tuist
         run: |
-          export PATH="$HOME/.tuist/bin:$PATH"
           tuist generate
 
       - name: Fastlane Beta (Build & Upload)
