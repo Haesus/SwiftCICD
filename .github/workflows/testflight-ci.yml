@@ -37,10 +37,10 @@ jobs:
           chmod 600 "$HOME/AuthKey_${ASC_KEY_ID}.p8"
           ls -l "$HOME/AuthKey_${ASC_KEY_ID}.p8"
 
-      - name: Xcode Select (optional)
-        run: |
-          xcodebuild -version
-          # 필요 시 특정 버전 선택: sudo xcode-select -s "/Applications/Xcode_16.0.app"
+      - name: Select Xcode 16
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '16.0'
 
       - name: Ensure Keychain (for match)
         run: |
@@ -51,6 +51,7 @@ jobs:
 
       - name: Install Tuist (via Homebrew)
         run: |
+          brew update
           brew tap tuist/tuist
           brew install --formula tuist
           tuist version
