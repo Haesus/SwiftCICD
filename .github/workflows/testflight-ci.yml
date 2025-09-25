@@ -59,16 +59,16 @@ jobs:
         run: |
           tuist generate
 
-     - name: Setup SSH for match repo
-       env:
-         MATCH_SSH_PRIVATE_KEY: ${{ secrets.MATCH_SSH_PRIVATE_KEY }}
-       run: |
-         mkdir -p ~/.ssh
-         echo "$MATCH_SSH_PRIVATE_KEY" | base64 --decode > ~/.ssh/id_rsa
-         chmod 600 ~/.ssh/id_rsa
-         ssh-keyscan github.com >> ~/.ssh/known_hosts
-         # (선택) 연결 확인
-         GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa" git ls-remote $MATCH_GIT_URL_SSH -h HEAD
+      - name: Setup SSH for match repo
+        env:
+          MATCH_SSH_PRIVATE_KEY: ${{ secrets.MATCH_SSH_PRIVATE_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$MATCH_SSH_PRIVATE_KEY" | base64 --decode > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          # (선택) 연결 확인
+          GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa" git ls-remote $MATCH_GIT_URL_SSH -h HEAD
     
       - name: Fastlane Beta (Build & Upload)
         run: |
