@@ -98,7 +98,6 @@ Dependencies/
 # ===============================
 # fastlane (iOS 배포/테스트 자동화)
 # ===============================
-fastlane/
 fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots/**/*.png

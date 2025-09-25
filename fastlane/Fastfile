@@ -1,0 +1,47 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+
+platform :ios do
+ desc "Push a new beta build to TestFlight"
+  lane :beta do
+   api_key = app_store_connect_api_key(
+    key_id: "22R8QHVY5X", # ENV["ASC_KEY_ID"],
+    issuer_id: "1b2dea1f-c3b5-4d92-a370-99c0fa93aab2", # ENV["ASC_ISSUER_ID"],
+    key_filepath: File.expand_path("~/AuthKey_22R8QHVY5X.p8") # "./AuthKey_#{ENV['ASC_KEY_ID']}.p8"
+   )
+
+   # 배포용 인증서 로드
+   match(type: "appstore", readonly: true)
+
+   increment_build_number(xcodeproj: "SwiftCICD.xcodeproj")
+
+   build_app(
+    workspace: "SwiftCICD.xcworkspace",
+    scheme: "SwiftCICD",
+    configuration: "Release",
+    export_method: "app-store",
+    export_options: {
+     provisioningProfiles: {
+      "dev.tuist.SwiftCICD" => "match AppStore dev.tuist.SwiftCICD"
+     }
+    }
+   )
+   upload_to_testflight(
+    api_key: api_key
+   )
+ end
+end
