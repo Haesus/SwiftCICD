@@ -63,19 +63,24 @@ platform :ios do
 
     # --------------------------------------------------------
     # 3) 빌드 번호 증가 전략
-    #    - 원격 TestFlight의 최신 빌드 번호와 로컬 프로젝트의 빌드 번호를 비교해 큰 값+1을 사용
-    #    - 필요한 값:
-    #      app_identifier → 번들 ID (예: "dev.tuist.SwiftCICD")
-    #      xcodeproj     → Xcode 프로젝트 파일명 (예: "SwiftCICD.xcodeproj")
-    # --------------------------------------------------------
-    remote = latest_testflight_build_number(app_identifier: "dev.tuist.SwiftCICD") || 0
-    local  = (get_build_number(xcodeproj: "SwiftCICD.xcodeproj") || "0").to_i
-    next_build = [remote.to_i, local].max + 1
+    #    - 시간 기반 빌드번호(초 단위) — 예: 20250925_122532 → 20250925122532 (14자리, Apple 제한 18자리 이내)
+    # 시간 기반 빌드번호(UTC+09:00 고정, 한국 표준시)
+    # GitHub Actions 러너가 어떤 타임존에서 돌아가더라도 동일하게 적용됨
+    time_build = (Time.now.getlocal('+09:00')).strftime('%Y%m%d%H%M%S').to_i
+
+    # 원격/로컬/시간값 중 가장 큰 값으로 설정하여 "반드시 증가" 조건을 보장
+    # - 병렬 빌드나 타임존 이슈로 과거 값이 나올 수 있어 max 사용
+    # override = ENV['BUILD_NUMBER_OVERRIDE']&.to_i
+    # remote = (latest_testflight_build_number(app_identifier: 'dev.tuist.SwiftCICD') || 0).to_i
+    # local  = (get_build_number(xcodeproj: 'SwiftCICD.xcodeproj') || '0').to_i
+    # candidates = [time_build, remote, local]
+    # candidates << override if override && override > 0
+    # next_build = candidates.max
 
     # 실제 프로젝트의 빌드 번호를 next_build로 세팅
     increment_build_number(
       xcodeproj: "SwiftCICD.xcodeproj",
-      build_number: next_build
+      build_number: time_build
     )
 
     # --------------------------------------------------------
