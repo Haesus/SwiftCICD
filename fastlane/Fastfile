@@ -32,7 +32,18 @@ platform :ios do
     git_branch: ENV["MATCH_GIT_BRANCH"]     # 선택
    )
 
-   increment_build_number(xcodeproj: "SwiftCICD.xcodeproj")
+   # 원격(ASC) 최신 빌드번호 조회 (없으면 0 처리)
+   remote = latest_testflight_build_number(app_identifier: "dev.tuist.SwiftCICD") || 0
+
+   # 로컬 프로젝트의 현재 빌드번호 조회 (없으면 0 처리)
+   local  = (get_build_number(xcodeproj: "SwiftCICD.xcodeproj") || "0").to_i
+
+   next_build = [remote.to_i, local].max + 1
+
+   increment_build_number(
+    xcodeproj: "SwiftCICD.xcodeproj",
+    build_number: next_build
+   )
 
    build_app(
     workspace: "SwiftCICD.xcworkspace",
