@@ -14,6 +14,7 @@ jobs:
       ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
       ASC_API_KEY_BASE64: ${{ secrets.ASC_API_KEY_BASE64 }}
       MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
+      MATCH_GIT_URL_SSH: ${{ secrets.MATCH_GIT_URL_SSH }}
       MATCH_USERNAME: ${{ secrets.MATCH_USERNAME }}
       MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
       MATCH_KEYCHAIN_PASSWORD: ${{ secrets.MATCH_KEYCHAIN_PASSWORD }}
@@ -35,12 +36,6 @@ jobs:
           echo "$ASC_API_KEY_BASE64" | base64 --decode > "$HOME/AuthKey_${ASC_KEY_ID}.p8"
           chmod 600 "$HOME/AuthKey_${ASC_KEY_ID}.p8"
           ls -l "$HOME/AuthKey_${ASC_KEY_ID}.p8"
-
-#      - name: (Optional) Setup SSH for match repo
-#        if: ${{ secrets.MATCH_SSH_PRIVATE_KEY != '' }}
-#        uses: webfactory/ssh-agent@v0.9.0
-#        with:
-#          ssh-private-key: ${{ secrets.MATCH_SSH_PRIVATE_KEY }}
 
       - name: Xcode Select (optional)
         run: |
@@ -64,6 +59,17 @@ jobs:
         run: |
           tuist generate
 
+     - name: Setup SSH for match repo
+       env:
+         MATCH_SSH_PRIVATE_KEY: ${{ secrets.MATCH_SSH_PRIVATE_KEY }}
+       run: |
+         mkdir -p ~/.ssh
+         echo "$MATCH_SSH_PRIVATE_KEY" | base64 --decode > ~/.ssh/id_rsa
+         chmod 600 ~/.ssh/id_rsa
+         ssh-keyscan github.com >> ~/.ssh/known_hosts
+         # (선택) 연결 확인
+         GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa" git ls-remote $MATCH_GIT_URL_SSH -h HEAD
+    
       - name: Fastlane Beta (Build & Upload)
         run: |
           bundle exec fastlane beta
