@@ -36,11 +36,11 @@ jobs:
           chmod 600 "$HOME/AuthKey_${ASC_KEY_ID}.p8"
           ls -l "$HOME/AuthKey_${ASC_KEY_ID}.p8"
 
-      - name: (Optional) Setup SSH for match repo
-        if: ${{ secrets.MATCH_SSH_PRIVATE_KEY != '' }}
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.MATCH_SSH_PRIVATE_KEY }}
+#      - name: (Optional) Setup SSH for match repo
+#        if: ${{ secrets.MATCH_SSH_PRIVATE_KEY != '' }}
+#        uses: webfactory/ssh-agent@v0.9.0
+#        with:
+#          ssh-private-key: ${{ secrets.MATCH_SSH_PRIVATE_KEY }}
 
       - name: Xcode Select (optional)
         run: |
