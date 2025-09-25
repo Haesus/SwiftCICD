@@ -1,13 +1,44 @@
+#############################################################
+# Matchfile: fastlane match 설정 - 인증서 및 프로비저닝 관리
+#############################################################
+
+# 인증서와 프로비저닝 프로파일을 저장할 Git 레포 URL
+# - 권장: 비공개 레포 (예: SSH 방식 git@github.com:org/certificates-ios.git)
+# - 현재 예시: HTTPS URL
+# - 반드시 이 레포는 CI에서 접근 가능해야 함
+#   (SSH 사용 시 Deploy Key / Personal Access Token(PAT) 권장)
 git_url("https://github.com/Haesus/certificates-ios.git")
 
+# 저장 방식
+# - 기본값: "git"
+# - 다른 옵션으로는 google_cloud, s3 등이 있음
+# - 저장소 타입에 따라 인증서 및 프로비저닝 프로파일을 어디에 저장할지 결정
 storage_mode("git")
 
-type("appstore") # The default type, can be: appstore, adhoc, enterprise or development
+# 인증서 종류
+# - appstore: 앱스토어 배포용 (기본값)
+# - development: 개발용 인증서 및 프로파일
+# - adhoc: 테스트 기기 등록용 (내부 테스트용)
+# - enterprise: 엔터프라이즈 배포용
+# - 이 값에 따라 생성/관리되는 인증서 및 프로비저닝 프로파일 유형이 결정됨
+type("appstore")
 
+# 관리할 앱 번들 ID 목록
+# - 예: ["com.company.myapp", "com.company.myapp.extension"]
+# - 앱스토어에 등록된 앱의 번들 ID를 정확히 입력해야 함
 app_identifier(["dev.tuist.SwiftCICD"])
-username("sea15510@icloud.com") # Your Apple Developer Portal username
 
-# For all available options run `fastlane match --help`
-# Remove the # in the beginning of the line to enable the other options
+# Apple Developer Portal 로그인용 Apple ID
+# - match가 Apple Developer Portal에 접근하기 위해 필요
+# - App Store Connect API Key와는 별개의 계정 정보임
+# - Apple Developer 계정의 실소유주 ID
+# - 예: "developer@company.com"
+username("sea15510@icloud.com")
 
-# The docs are available on https://docs.fastlane.tools/actions/match
+# 해당 부분은 팀원들이 프로파일을 가져올때 사용할 명령어
+# fastlane match development --readonly
+# fastlane match appstore --readonly
+
+# 참고:
+# - 추가 옵션 및 상세 설정은 `fastlane match --help` 명령어로 확인 가능
+# - 공식 문서: https://docs.fastlane.tools/actions/match

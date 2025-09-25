@@ -1,8 +1,25 @@
-app_identifier("dev.tuist.SwiftCICD") # The bundle identifier of your app
-apple_id("sea15510@icloud.com") # Your Apple Developer Portal username
+#############################################################
+# Appfile: fastlane 설정 - 앱 ID, 계정, 팀 정보 정의
+#############################################################
+# 참고 문서:
+# https://docs.fastlane.tools/advanced/#appfile
 
-itc_team_id("126787512") # App Store Connect Team ID
-team_id("3TGR3P459K") # Developer Portal Team ID
+# 앱 번들 ID (Xcode 프로젝트의 Bundle Identifier와 동일해야 함)
+# 예시: "com.company.myapp"
+app_identifier("dev.tuist.SwiftCICD")
 
-# For more information about the Appfile, see:
-#     https://docs.fastlane.tools/advanced/#appfile
+# Apple ID (로그인용 계정 이메일; API 키 인증 사용 시에는 필수 아님)
+# 예시: "developer@company.com"
+apple_id("sea15510@icloud.com")
+
+# App Store Connect 팀 ID (숫자형 ID, 옵션)
+# - iTC 계정이 여러 팀에 속해 있다면 필요
+# - 확인 경로: App Store Connect → Users and Access → Team 정보
+# 예시: "123456789"
+itc_team_id("126787512")
+
+# Apple Developer Portal 팀 ID (문자/숫자 혼합, 옵션)
+# - 코드사인 인증서 발급에 필요
+# - 확인 경로: developer.apple.com → Membership → Team ID
+# 예시: "1ABC2D345E"
+team_id("3TGR3P459K")

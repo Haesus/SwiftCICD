@@ -20,6 +20,7 @@ let project = Project(
             buildableFolders: [
                 "SwiftCICD/Sources",
                 "SwiftCICD/Resources",
+                "fastlane",
                 ".github"
             ],
             dependencies: [],
