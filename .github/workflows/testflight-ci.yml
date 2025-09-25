@@ -8,7 +8,7 @@ on:
 jobs:
   build-and-upload:
     runs-on: macos-14
-
+    
     env:
       ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
       ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
