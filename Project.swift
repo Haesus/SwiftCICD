@@ -7,7 +7,7 @@ let project = Project(
             "ENABLE_USER_SCRIPT_SANDBOXING": "YES",
             "DEVELOPMENT_TEAM": "3TGR3P459K", // 팀ID
             "STRING_CATALOG_GENERATE_SWIFT_SYMBOLS": "YES", // 문자열 심볼 생성
-            "STRING_CATALOG_GENERATE_SYMBOLS": "YES",
+            "STRING_CATALOG_GENERATE_SYMBOLS": "YES", // 문자열 심볼 생성
             "ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS": "YES" // 에셋 심볼 익스텐션 생성
         ]
     ),
