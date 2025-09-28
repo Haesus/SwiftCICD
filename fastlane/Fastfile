@@ -104,7 +104,7 @@ platform :ios do
         }
       }
     )
-
+    
     # --------------------------------------------------------
     # 5) TestFlight 업로드
     #    - api_key: 위에서 생성한 App Store Connect API Key 객체
