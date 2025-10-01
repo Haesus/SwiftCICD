@@ -20,7 +20,7 @@ jobs:
         uses: atlassian/gajira-login@v3
         env:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}       # e.g. https://your-domain.atlassian.net
-          JIRA_USER_EMAIL: ${{ secrets.JIRA_EMAIL }}         # Jira 계정 이메일
+          JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}         # Jira 계정 이메일
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}      # Jira API token
 
       - name: Build Jira summary/description
