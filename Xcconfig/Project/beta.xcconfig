@@ -1,0 +1,8 @@
+#include "../Shared.xcconfig"
+#include "../Env.xcconfig"
+
+APP_NAME = 태전그룹
+
+MARKETING_VERSION = 1.2.0
+CURRENT_PROJECT_VERSION = 1
+DEVELOPMENT_TEAM = 6ECR6FFMN6
