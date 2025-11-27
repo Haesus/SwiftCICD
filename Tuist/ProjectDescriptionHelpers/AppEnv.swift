@@ -15,7 +15,7 @@ import UtilityPlugin
 public enum AppEnv {
   /// 조직/회사 이름
   /// Project 및 Target 생성 시 organizationName 옵션에 사용됨
-  public static let organizationName: String = "<#OrganizationName#>"
+  public static let organizationName: String = "TestTemplate"
   
   /// 최소 지원 iOS 버전 설정
   /// 모든 모듈(Target)에 공통 적용되는 Deployment Target
@@ -26,7 +26,7 @@ public enum AppEnv {
   
   /// 앱 본체(Target)의 기본 번들 ID
   /// 개별 모듈에는 moduleBundleId(name:) 규칙이 적용됨
-  public static let bundleId: String = "<#com.github.haesus.bundle#>"
+  public static let bundleId: String = "com.github.haesus.TestTemplate"
   
   /// 각 모듈(Target)을 위한 번들 ID 생성 메서드
   /// 모듈 이름을 기반으로 소문자 + 알파벳/숫자/점 문자만 허용하도록 정제 후
@@ -39,6 +39,6 @@ public enum AppEnv {
         // 허용되지 않는 문자 제거 → 유효한 문자열로 정제
     moduleName = moduleName.components(separatedBy: validCharacters.inverted).joined(separator: "")
         // 최종 번들 ID 규칙에 맞게 조합하여 반환
-    return "<#com.github.haesus.bundle#>.\(moduleName)"
+    return "com.github.haesus.TestTemplate.\(moduleName)"
   }
 }

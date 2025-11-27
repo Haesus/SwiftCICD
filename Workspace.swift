@@ -9,19 +9,20 @@ import ProjectDescription
 import DependencyPlugin
 
 let workspace = Workspace(
-  name: "<#WorkspaceName#>",
+  name: "TestTemplate",
   projects: {
     var projects: [Path] = []
     
-    projects.append(Path("Projects/App"))
+    projects.append(Path("Projects/App/App"))
+    projects += App.allCases.map {
+      Path("Projects/\(String(describing: type(of: $0)))/\(String(describing: $0))")
+    }
     
-    // Feature 루트 모듈을 워크스페이스에 포함합니다.
     projects.append(Path("Projects/Feature/Feature"))
     projects += Feature.allCases.map {
       Path("Projects/\(String(describing: type(of: $0)))/\(String(describing: $0))")
     }
     
-    // Shared 루트 모듈을 워크스페이스에 포함합니다.
     projects.append(Path("Projects/Shared/Shared"))
     projects += Shared.allCases.map {
       Path("Projects/\(String(describing: type(of: $0)))/\(String(describing: $0))")
@@ -30,7 +31,7 @@ let workspace = Workspace(
     return projects
   }(),
   additionalFiles: [
-    "<#xcconfigFolders#>/**"
+    "Xcconfig/**"
   ],
   generationOptions: .options(
     enableAutomaticXcodeSchemes: false,

@@ -12,7 +12,7 @@ import ProjectDescription
 extension Entitlements {
   /// <#Entitlements#> 프로젝트 전용 Entitlements 네임스페이스
   /// 각 타겟(앱/익스텐션)에서 재사용할 권한 설정을 정의
-  public enum <#EntitlementsName#> {
+  public enum TestTemplate {
     /// 앱 타겟에서 사용될 Entitlements 정의
     /// - Note: 애플 로그인, Push Notifications, Keychain Sharing 등 필요한 권한을 이곳에 추가
     public static var app: Entitlements {

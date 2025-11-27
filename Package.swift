@@ -22,13 +22,13 @@ let packageSettings: PackageSettings = .init(
 #endif
 
 let package = Package(
-  name: "<#PackageName#>",
+  name: "TestTemplate",
   dependencies: [
     // Add your own dependencies here:
     // .package(url: "https://github.com/Alamofire/Alamofire", from: "5.0.0"),
     // You can read more about dependencies here: https://docs.tuist.io/documentation/tuist/dependencies
-    .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", exact: "1.23.1"),
-    .package(url: "https://github.com/Alamofire/Alamofire.git", exact: "5.10.2"),
-    .package(url: "https://github.com/auth0/JWTDecode.swift", exact: "3.3.0"),
+//    .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", exact: "1.23.1"),
+//    .package(url: "https://github.com/Alamofire/Alamofire.git", exact: "5.10.2"),
+//    .package(url: "https://github.com/auth0/JWTDecode.swift", exact: "3.3.0"),
   ]
 )

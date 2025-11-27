@@ -8,7 +8,7 @@
 import ProjectDescription
 
 extension InfoPlist {
-  public enum <#InfoPlist#> {
+  public enum TestTemplate {
     public static var app: InfoPlist {
       return .dictionary(
         [
@@ -39,13 +39,6 @@ extension InfoPlist {
           "CFBundleShortVersionString": "$(MARKETING_VERSION)",
           // 빌드 번호
           "CFBundleVersion": "$(CURRENT_PROJECT_VERSION)",
-          // 카카오 인증을 위한 URL 스킴 설정
-          "CFBundleURLTypes": [
-            [
-              "CFBundleURLName": "kakao",
-              "CFBundleURLSchemes": ["kakao$(KAKAO_AUTH_KEY)"]
-            ]
-          ],
           
           // MARK: - Launch Services
           // 앱 실행에 iPhoneOS가 필요함

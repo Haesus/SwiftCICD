@@ -11,7 +11,7 @@ extension PrivacyManifest {
   // MARK: - Privacy Manifest
   // 앱이 수집·사용하는 데이터 유형과 접근 API를 선언적으로 정의하여
   // App Store Privacy 요구사항을 충족하기 위한 매니페스트
-  public static var <#PrivacyManifestName#>: Self {
+  public static var testTemplate: Self {
     return .privacyManifest(
       tracking: false,
       trackingDomains: [],
