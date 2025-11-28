@@ -15,7 +15,6 @@ extension PrivacyManifest {
     return .privacyManifest(
       tracking: false,
       trackingDomains: [],
-      // 앱이 수집하는 데이터 유형 목록
       // 각 항목은 Apple의 Privacy Nutrition Labels 규칙에 따라 구성됨
       collectedDataTypes: [
         // 기기 식별자(Device ID) — 앱 기능을 위해 수집되며 사용자와 연결되지 않음

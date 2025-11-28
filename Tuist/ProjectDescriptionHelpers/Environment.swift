@@ -10,7 +10,7 @@ import UtilityPlugin
 
 /// 프로젝트 루트 디렉터리 경로를 환경 변수에서 가져옴 (없으면 SRCROOT 사용)
 /// "TUIST_ROOT_DIR" 환경 변수값
-public let rootDirectory = Environment.rootDir.getString(default: "SRCROOT")
+public let rootDirectory = Environment.rootDir.getString(default: "")
 
 /// 현재 빌드 설정(TUIST_BUILD_CONFIG)을 환경 변수에서 읽음 (기본값 DEV)
 /// "TUIST_BUILD_CONFIG" 환경 변수값

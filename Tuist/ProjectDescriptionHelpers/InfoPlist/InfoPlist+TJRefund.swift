@@ -12,7 +12,7 @@ extension InfoPlist {
     public static var app: InfoPlist {
       return .dictionary(
         [
-          // MARK: - Environment Value
+          // MARK: - Environment
           // 환경별로 달라지는 API 주소
           "BASE_URL": "$(BASE_URL)",
           
@@ -20,7 +20,7 @@ extension InfoPlist {
           // 미국 수출 규정용 암호화 관련 플래그
           "ITSAppUsesNonExemptEncryption": false,
           
-          // MARK: - Core Foundation
+          // MARK: - Localization
           // 기본 언어/지역 설정
           "CFBundleDevelopmentRegion": "ko_KR",
           // 홈 화면에 표시될 앱 이름
@@ -40,34 +40,40 @@ extension InfoPlist {
           // 빌드 번호
           "CFBundleVersion": "$(CURRENT_PROJECT_VERSION)",
           
-          // MARK: - Launch Services
+          // MARK: - Launch
           // 앱 실행에 iPhoneOS가 필요함
           "LSRequiresIPhoneOS": true,
-          // 외부 앱 URL 스킴 쿼리 허용 목록
+          // 외부 앱 URL 호출 시
           "LSApplicationQueriesSchemes": [
-            "kakaokompassauth",
-            "kakaolink"
           ],
           
-          // MARK: - Cocoa
-          // 네트워크 보안 정책 (ATS 설정)
+          // MARK: - Network
+          // ATS(App Transport Security) 및 네트워크 관련 설정
           "NSAppTransportSecurity": [
             "NSAllowsArbitraryLoads": true
+            // 특정 도메인만 열어둘 경우
+//            "NSExceptionDomains": [
+//              "<#yourDomain.com#>": [
+//                "NSIncludesSubdomains": true,
+//                "NSThirdPartyExceptionAllowsInsecureHTTPLoads": true
+//              ]
+//            ]
           ],
-          // Bonjour 서비스 검색 설정
+          // Bonjour 서비스 검색 설정(Flutter 개발 환경)
           "NSBonjourServices": [
             "_dartobservatory._tcp"
           ],
-          // 아래 권한들은 필요 시 활성화하여 안내 문구 제공
-          //        "NSCameraUsageDescription": "",
-          //        "NSContactsUsageDescription": "",
-          //        "NSLocationWhenInUseUsageDescription": "",
-          //        "NSMicrophoneUsageDescription": "",
-          //        "NSPhotoLibraryUsageDescription": "",
-          //        "NSUserTrackingUsageDescription": "",
           
+          // MARK: - Permissions
+          // 필요한 경우 iOS 권한 안내 문구 활성화
+          //          "NSCameraUsageDescription": "",
+          //          "NSContactsUsageDescription": "",
+          //          "NSLocationWhenInUseUsageDescription": "",
+          //          "NSMicrophoneUsageDescription": "",
+          //          "NSPhotoLibraryUsageDescription": "",
+          //          "NSUserTrackingUsageDescription": "",
           
-          // MARK: - UIKit
+          // MARK: - UI
           // Spotlight 검색 연동 여부
           "CoreSpotlightContinuation": true,
           // 앱에서 사용되는 커스텀 폰트 목록
