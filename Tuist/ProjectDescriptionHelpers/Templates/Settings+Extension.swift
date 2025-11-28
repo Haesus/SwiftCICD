@@ -55,7 +55,7 @@ extension ProjectDescription.Settings {
           xcconfig: xcconfig
         )
       ],
-      defaultSettings: .essential
+      defaultSettings: .none
     )
   }
   
@@ -88,7 +88,7 @@ extension ProjectDescription.Settings {
           xcconfig: .targetXCConfig(type: product)
         )
       ],
-      defaultSettings: .essential
+      defaultSettings: .none
     )
   }
   

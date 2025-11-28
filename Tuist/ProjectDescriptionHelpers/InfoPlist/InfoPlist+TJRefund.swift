@@ -24,7 +24,7 @@ extension InfoPlist {
           // 기본 언어/지역 설정
           "CFBundleDevelopmentRegion": "ko_KR",
           // 홈 화면에 표시될 앱 이름
-          "CFBundleDisplayName": "$(APP_NAME)",
+          "CFBundleDisplayName": "$(APP_NAME)$(APP_ENV_CONFIG)",
           // 실행 파일 이름
           "CFBundleExecutable": "$(EXECUTABLE_NAME)",
           // 앱의 번들 ID

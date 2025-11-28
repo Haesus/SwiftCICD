@@ -10,7 +10,7 @@ import ProjectDescription
 // MARK: - Entitlements Factory
 // Tuist에서 앱/모듈에 적용할 권한(Entitlements) 설정을 모아두는 확장
 extension Entitlements {
-  /// <#Entitlements#> 프로젝트 전용 Entitlements 네임스페이스
+  /// 프로젝트 전용 Entitlements 네임스페이스
   /// 각 타겟(앱/익스텐션)에서 재사용할 권한 설정을 정의
   public enum TestTemplate {
     /// 앱 타겟에서 사용될 Entitlements 정의
