@@ -7,13 +7,17 @@ on:
 
 jobs:
   build-and-upload:
-    runs-on: macos-14
+    runs-on: macos-15
+    concurrency:
+      group: testflight-ci
+      cancel-in-progress: true
     
     env:
       # TODO: App Store Connect API Key 정보를 GitHub Secrets에 등록하세요.
       ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
       ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
       ASC_API_KEY_BASE64: ${{ secrets.ASC_API_KEY_BASE64 }}
+      API_BASE_URL: ${{ secrets.API_BASE_URL }}
 
       # TODO: fastlane match 인증서 저장소 접근 정보를 GitHub Secrets에 등록하세요.
       MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
@@ -29,11 +33,25 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
+
+      - name: Configure bundler path
+        run: bundle config set --local path 'vendor/bundle'
+
+      - name: Sync bundler version
+        run: bundle update --bundler
+
+      - name: Cache bundler
+        uses: actions/cache@v5
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-bundler-${{ hashFiles('Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bundler-
 
       - name: Install gems (fastlane via bundler)
         run: |
-          bundle install --path vendor/bundle --jobs 4 --retry 3
+          bundle install --jobs 4 --retry 3
 
       - name: Write App Store Connect API key (.p8)
         run: |
@@ -43,10 +61,16 @@ jobs:
           chmod 600 "$HOME/AuthKey_${ASC_KEY_ID}.p8"
           ls -l "$HOME/AuthKey_${ASC_KEY_ID}.p8"
 
-      - name: Select Xcode 16
+      - name: Select Xcode (Latest Stable)
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '16.1.0'
+          xcode-version: 'latest-stable'
+
+      - name: Show Xcode & SDKs
+        run: |
+          ls -1 /Applications | grep -E '^Xcode' || true
+          xcodebuild -version
+          xcodebuild -showsdks
 
       - name: Ensure Keychain (for match)
         run: |
@@ -55,16 +79,45 @@ jobs:
           security unlock-keychain -p "$MATCH_KEYCHAIN_PASSWORD" build.keychain
           security set-keychain-settings -lut 21600 build.keychain
 
-      - name: Install Tuist (via Homebrew)
+      - name: Install Tuist (mise)
+        uses: jdx/mise-action@v3
+
+      - name: Setup Tuist
         run: |
-          brew update
-          brew tap tuist/tuist
-          brew install --formula tuist
+          mise install tuist@latest
+          mise use -g tuist@latest
           tuist version
+
+      - name: Prepare xcconfig (BETA only)
+        run: |
+          mkdir -p Xcconfig/Project
+          mkdir -p Xcconfig/Target
+          cp Xcconfig/Project/Sample_dev.xcconfig Xcconfig/Project/dev.xcconfig
+          cp Xcconfig/Project/Sample_beta.xcconfig Xcconfig/Project/beta.xcconfig
+          cp Xcconfig/Project/Sample_release.xcconfig Xcconfig/Project/release.xcconfig
+          cp Xcconfig/Sample_Env.xcconfig Xcconfig/Env.xcconfig
+          cp Xcconfig/Sample_Shared.xcconfig Xcconfig/Shared.xcconfig
+          if [ -n "$API_BASE_URL" ]; then
+              SAFE_API_BASE_URL=$(printf '%s' "$API_BASE_URL" | sed 's#//#/$()/#g')
+              {
+                echo ""
+                echo "// Injected from GitHub Actions secret"
+                echo "API_BASE_URL = $SAFE_API_BASE_URL"
+              } >> Xcconfig/Env.xcconfig
+          fi
+          if [ -n "${{ secrets.DEVELOPMENT_TEAM }}" ]; then
+              sed -i '' "s/^DEVELOPMENT_TEAM *=.*/DEVELOPMENT_TEAM = ${{ secrets.DEVELOPMENT_TEAM }}/" \
+              Xcconfig/Project/beta.xcconfig
+          fi
+
+      - name: Install Tuist dependencies
+        run: |
+          tuist install
 
       - name: Generate Xcode project with Tuist
         run: |
-          TUIST_BUILD_CONFIG=BETA tuist generate
+          tuist install
+          tuist generate
 
       - name: Setup SSH for match repo
         env:
@@ -72,8 +125,13 @@ jobs:
           MATCH_SSH_PRIVATE_KEY: ${{ secrets.MATCH_SSH_PRIVATE_KEY }}
         run: |
           mkdir -p ~/.ssh
+          if [ -z "$MATCH_SSH_PRIVATE_KEY" ]; then
+            echo "MATCH_SSH_PRIVATE_KEY is empty" >&2
+            exit 1
+          fi
           echo "$MATCH_SSH_PRIVATE_KEY" | base64 --decode > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
+          ssh-keygen -lf ~/.ssh/id_rsa -E sha256
           ssh-keyscan github.com >> ~/.ssh/known_hosts
           # (선택) 연결 확인
           GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa" git ls-remote $MATCH_GIT_URL_SSH -h HEAD
