@@ -35,6 +35,7 @@ jobs:
       MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
       MATCH_KEYCHAIN_PASSWORD: ${{ secrets.MATCH_KEYCHAIN_PASSWORD }}
       MATCH_KEYCHAIN_NAME: "build.keychain"
+      MATCH_SSH_PRIVATE_KEY: ${{ secrets.MATCH_SSH_PRIVATE_KEY }}
 
       # TODO: 인증서 저장소 브랜치와 배포 환경을 프로젝트에 맞게 조정하세요.
       MATCH_GIT_BRANCH: "master"
@@ -43,6 +44,38 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+
+      - name: Preflight required configuration
+        run: |
+          missing=0
+          require_env() {
+            local name="$1"
+            if [ -z "${!name:-}" ]; then
+              echo "::error title=Missing GitHub Secret::$name is empty"
+              missing=1
+            fi
+          }
+
+          require_env ASC_KEY_ID
+          require_env ASC_ISSUER_ID
+          require_env ASC_API_KEY_BASE64
+          require_env FASTLANE_APPLE_ID
+          require_env FASTLANE_ITC_TEAM_ID
+          require_env DEVELOPMENT_TEAM
+          require_env APP_IDENTIFIER_RELEASE
+          require_env APP_IDENTIFIER_BETA
+          require_env APP_IDENTIFIER_DEV
+          require_env MATCH_GIT_URL_SSH
+          require_env MATCH_PASSWORD
+          require_env MATCH_KEYCHAIN_PASSWORD
+          require_env MATCH_SSH_PRIVATE_KEY
+
+          if [ "$missing" -ne 0 ]; then
+            echo "Required GitHub Secrets are missing. See README.md Initial Setup Checklist."
+            exit 1
+          fi
+
+          scripts/validate_template_setup.sh
 
       - name: Configure bundler path
         run: bundle config set --local path 'vendor/bundle'
@@ -128,9 +161,6 @@ jobs:
           tuist generate
 
       - name: Setup SSH for match repo
-        env:
-          # TODO: 인증서 저장소 접근용 SSH private key를 base64로 인코딩해 GitHub Secrets에 등록하세요.
-          MATCH_SSH_PRIVATE_KEY: ${{ secrets.MATCH_SSH_PRIVATE_KEY }}
         run: |
           mkdir -p ~/.ssh
           if [ -z "$MATCH_SSH_PRIVATE_KEY" ]; then

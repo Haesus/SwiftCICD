@@ -13,6 +13,10 @@ install:
 	@echo "\033[32m의존성 설치 중...\033[0m"
 	tuist install
 
+.PHONY: validate_template_setup
+validate_template_setup:
+	scripts/validate_template_setup.sh
+
 .PHONY: cache
 cache:
 	TUIST_ROOT_DIR=${PWD} tuist cache ${target} --cache-profile only-external

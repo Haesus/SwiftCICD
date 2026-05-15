@@ -45,6 +45,41 @@ xcodebuild -workspace SwiftCICD.xcworkspace -scheme SwiftCICD_DEV -configuration
 
 Fastlane 배포는 `TUIST_BUILD_CONFIG` 값에 따라 `DEV`, `BETA`, `RELEASE` 번들 ID와 스킴을 선택합니다.
 
+## Template Validation
+
+새 프로젝트에 이 템플릿을 복사한 뒤에는 먼저 설정값이 모두 교체됐는지 검사하세요.
+
+```bash
+make validate_template_setup
+```
+
+이 명령은 아래 항목을 확인합니다.
+
+- `YOUR_TEAM_ID`, `YOUR_ITC_TEAM_ID` 같은 Team ID placeholder
+- `com.company.app`, `developer@example.com`, `your-org` 같은 예시 값
+- `AppEnv.swift`, `Xcconfig/Project/*.xcconfig`, `fastlane/*` 필수 설정 파일 존재 여부
+
+현재 저장소는 템플릿 자체라 placeholder가 남아 있는 것이 정상입니다. 템플릿 저장소에서 스크립트 동작만 확인할 때는 아래 옵션을 사용하세요.
+
+```bash
+scripts/validate_template_setup.sh --allow-template-placeholders
+```
+
+새 프로젝트에서는 이 옵션을 사용하지 않는 것을 권장합니다. placeholder가 남아 있으면 빌드나 TestFlight 배포 전에 값을 교체해야 합니다.
+
+## CI Preflight
+
+`TestFlight CI` workflow는 첫 단계에서 preflight 검사를 실행합니다.
+
+preflight는 아래 두 가지를 먼저 확인합니다.
+
+- TestFlight 배포에 필요한 GitHub Secrets가 비어 있지 않은지
+- `scripts/validate_template_setup.sh` 기준으로 template placeholder가 남아 있지 않은지
+
+필수 Secret이 누락되면 workflow 초반에 `Missing GitHub Secret` 에러로 실패합니다. 이 경우 `.github/workflows/testflight-ci.yml`과 README의 GitHub Secrets 표를 기준으로 값을 채우면 됩니다.
+
+placeholder 검사에서 실패하면 `Initial Setup Checklist`의 파일별 교체값을 먼저 반영하세요.
+
 ## Initial Setup Checklist
 
 새 프로젝트로 사용할 때는 이 저장소를 복사한 뒤 아래 값을 먼저 교체하세요. 각 파일에도 `TODO` 주석을 남겨 두었습니다.
@@ -166,11 +201,18 @@ Jira 연동을 사용할 때 추가로 필요한 값입니다.
 
 ```bash
 make install
+make validate_template_setup
 TUIST_BUILD_CONFIG=dev tuist generate
 xcodebuild -workspace SwiftCICD.xcworkspace -scheme SwiftCICD_DEV -configuration DEV -destination 'generic/platform=iOS Simulator' build
 ```
 
-로컬 빌드가 통과하면 GitHub Secrets를 등록한 뒤 Actions에서 `TestFlight CI`를 수동 실행하세요. 수동 실행이 성공한 뒤에만 `push` 자동 배포 트리거를 켜는 것을 권장합니다.
+`make validate_template_setup`은 `YOUR_TEAM_ID`, `com.company.app`, `developer@example.com` 같은 template placeholder가 남아 있는지 검사합니다. 이 템플릿 저장소 자체에서 스크립트 동작만 확인할 때는 아래 옵션을 사용할 수 있습니다.
+
+```bash
+scripts/validate_template_setup.sh --allow-template-placeholders
+```
+
+로컬 빌드가 통과하면 GitHub Secrets를 등록한 뒤 Actions에서 `TestFlight CI`를 수동 실행하세요. workflow 첫 단계의 preflight가 필수 Secret과 남은 placeholder를 먼저 검사합니다. 수동 실행이 성공한 뒤에만 `push` 자동 배포 트리거를 켜는 것을 권장합니다.
 
 ### 7. 이름 변경 시 추가 확인
 
