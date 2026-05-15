@@ -2,12 +2,14 @@
 # Matchfile: fastlane match 설정 - 인증서 및 프로비저닝 관리
 #############################################################
 
-# 인증서와 프로비저닝 프로파일을 저장할 Git 레포 URL
+# TODO: 인증서와 프로비저닝 프로파일을 저장할 비공개 Git 레포 URL로 교체하세요.
 # - 권장: 비공개 레포 (예: SSH 방식 git@github.com:org/certificates-ios.git)
-# - 현재 예시: HTTPS URL
-# - 반드시 이 레포는 CI에서 접근 가능해야 함
-#   (SSH 사용 시 Deploy Key / Personal Access Token(PAT) 권장)
-git_url("https://github.com/Haesus/certificates-ios.git")
+# - CI에서는 GitHub Secrets의 MATCH_GIT_URL 또는 MATCH_GIT_URL_SSH로 주입하세요.
+# - SSH 사용 시 MATCH_SSH_PRIVATE_KEY, Deploy Key, known_hosts 설정이 필요합니다.
+git_url(ENV["MATCH_GIT_URL"] || ENV["MATCH_GIT_URL_SSH"] || "https://github.com/Haesus/certificates-ios.git")
+
+# TODO: 인증서 저장소의 브랜치명으로 교체하세요.
+git_branch(ENV["MATCH_GIT_BRANCH"] || "master")
 
 # 저장 방식
 # - 기본값: "git"
@@ -21,18 +23,21 @@ storage_mode("git")
 # - adhoc: 테스트 기기 등록용 (내부 테스트용)
 # - enterprise: 엔터프라이즈 배포용
 # - 이 값에 따라 생성/관리되는 인증서 및 프로비저닝 프로파일 유형이 결정됨
-type("development")
+type("appstore")
 
-# 관리할 앱 번들 ID 목록
-# - 예: ["com.company.myapp", "com.company.myapp.extension"]
-# - 앱스토어에 등록된 앱의 번들 ID를 정확히 입력해야 함
-app_identifier(["dev.tuist.SwiftCICD"])
+# TODO: AppEnv.bundleId의 DEV/BETA/RELEASE 값과 동일하게 교체하세요.
+# - App Store Connect 및 Apple Developer Identifiers에 등록된 앱 ID와 일치해야 합니다.
+# - 예: ["com.company.myapp", "com.company.myapp.beta", "com.company.myapp.dev"]
+app_identifier([
+  "dev.tuist.SwiftCICD",
+  "dev.tuist.SwiftCICD.beta",
+  "dev.tuist.SwiftCICD.dev"
+])
 
-# Apple Developer Portal 로그인용 Apple ID
-# - match가 Apple Developer Portal에 접근하기 위해 필요
-# - App Store Connect API Key와는 별개의 계정 정보임
-# - Apple Developer 계정의 실소유주 ID
-# - 예: "developer@company.com"
+# TODO: Apple Developer Portal 로그인 이메일로 교체하거나 ENV로 바꾸세요.
+# - match가 Apple Developer Portal에 접근할 때 사용합니다.
+# - App Store Connect API Key와는 별개의 계정 정보입니다.
+# - 예: ENV["FASTLANE_APPLE_ID"] || "developer@company.com"
 username("sea15510@icloud.com")
 
 # 해당 부분은 팀원들이 프로파일을 가져올때 사용할 명령어

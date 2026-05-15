@@ -27,8 +27,11 @@ Network Trash Folder
 # ===============================
 xcuserdata/
 *.xcconfig
+!Xcconfig/**/*.xcconfig
 !*.xcconfig.template
 DerivedData/
+Derived/
+Projects/**/Derived/
 build/
 *.hmap
 *.xcscmblueprint
@@ -205,6 +208,8 @@ artifacts/
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
+!Projects/App/SwiftCICD/Resources/RELEASE/
+!Projects/App/SwiftCICD/Resources/RELEASE/.gitkeep
 x64/
 x86/
 bld/

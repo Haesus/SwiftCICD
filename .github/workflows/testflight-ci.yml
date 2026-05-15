@@ -10,16 +10,22 @@ jobs:
     runs-on: macos-14
     
     env:
+      # TODO: App Store Connect API Key 정보를 GitHub Secrets에 등록하세요.
       ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
       ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
       ASC_API_KEY_BASE64: ${{ secrets.ASC_API_KEY_BASE64 }}
+
+      # TODO: fastlane match 인증서 저장소 접근 정보를 GitHub Secrets에 등록하세요.
       MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
       MATCH_GIT_URL_SSH: ${{ secrets.MATCH_GIT_URL_SSH }}
       MATCH_USERNAME: ${{ secrets.MATCH_USERNAME }}
       MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
       MATCH_KEYCHAIN_PASSWORD: ${{ secrets.MATCH_KEYCHAIN_PASSWORD }}
       MATCH_KEYCHAIN_NAME: "build.keychain"
+
+      # TODO: 인증서 저장소 브랜치와 배포 환경을 프로젝트에 맞게 조정하세요.
       MATCH_GIT_BRANCH: "master"
+      TUIST_BUILD_CONFIG: "BETA"
 
     steps:
       - name: Checkout
@@ -58,10 +64,11 @@ jobs:
 
       - name: Generate Xcode project with Tuist
         run: |
-          tuist generate
+          TUIST_BUILD_CONFIG=BETA tuist generate
 
       - name: Setup SSH for match repo
         env:
+          # TODO: 인증서 저장소 접근용 SSH private key를 base64로 인코딩해 GitHub Secrets에 등록하세요.
           MATCH_SSH_PRIVATE_KEY: ${{ secrets.MATCH_SSH_PRIVATE_KEY }}
         run: |
           mkdir -p ~/.ssh
