@@ -6,7 +6,7 @@ CURRENT_PROJECT_VERSION = 1
 
 // TODO: Apple Developer Membership의 Team ID로 교체하세요.
 // 확인 위치: developer.apple.com > Membership > Team ID
-DEVELOPMENT_TEAM = 3TGR3P459K
+DEVELOPMENT_TEAM = YOUR_TEAM_ID
 
 // TODO: RELEASE 빌드에서 홈 화면에 표시할 앱 이름으로 교체하세요.
-APP_NAME = SwiftCICD
+APP_NAME = App

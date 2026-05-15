@@ -15,7 +15,7 @@ import UtilityPlugin
 public enum AppEnv {
   /// TODO: 새 프로젝트를 시작할 때 조직/회사명으로 교체하세요.
   /// Project organizationName과 생성 파일 메타데이터에 사용됩니다.
-  public static let organizationName: String = "SwiftCICD"
+  public static let organizationName: String = "YourOrganization"
 
   /// 최소 지원 iOS 버전 설정
   /// 모든 모듈(Target)에 공통 적용되는 Deployment Target
@@ -31,11 +31,11 @@ public enum AppEnv {
   public static var bundleId: String {
     switch currentConfig {
     case .dev:
-      return "dev.tuist.SwiftCICD.dev"
+      return "com.company.app.dev"
     case .beta:
-      return "dev.tuist.SwiftCICD.beta"
+      return "com.company.app.beta"
     case .release:
-      return "dev.tuist.SwiftCICD"
+      return "com.company.app"
     }
   }
 

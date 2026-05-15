@@ -1,8 +1,10 @@
 name: Issue → Jira → Branch
 
 on:
-  issues:
-    types: [opened]
+  # TODO: Jira 연동을 사용할 프로젝트에서만 필요한 Secret/Jira project key를 채운 뒤 트리거를 활성화하세요.
+  # issues:
+  #   types: [opened]
+  workflow_dispatch:
 
 permissions:
   contents: write     # 브랜치(ref) 생성에 필요
@@ -11,6 +13,7 @@ permissions:
 
 jobs:
   create-jira-and-branch:
+    if: github.event_name == 'issues'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout (optional)
@@ -45,8 +48,8 @@ jobs:
         id: jira
         uses: atlassian/gajira-create@v3
         with:
-          project: KAN          # 예: ABC
-          issuetype: Task                                   # 필요에 맞게 Bug/Story 등
+          project: KAN          # TODO: Jira project key로 교체하세요. 예: ABC
+          issuetype: Task       # TODO: 필요에 맞게 Bug/Story 등으로 교체하세요.
           summary: ${{ steps.build.outputs.title }}
           description: |
             Created from GitHub issue #${{ github.event.issue.number }} in ${{ github.repository }}.
@@ -131,5 +134,5 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.payload.issue.number,
-              body: `🌱 Created branch: \`${branch}\``
+              body: `Created branch: \`${branch}\``
             })

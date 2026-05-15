@@ -6,7 +6,7 @@
 # - 권장: 비공개 레포 (예: SSH 방식 git@github.com:org/certificates-ios.git)
 # - CI에서는 GitHub Secrets의 MATCH_GIT_URL 또는 MATCH_GIT_URL_SSH로 주입하세요.
 # - SSH 사용 시 MATCH_SSH_PRIVATE_KEY, Deploy Key, known_hosts 설정이 필요합니다.
-git_url(ENV["MATCH_GIT_URL"] || ENV["MATCH_GIT_URL_SSH"] || "https://github.com/Haesus/certificates-ios.git")
+git_url(ENV["MATCH_GIT_URL"] || ENV["MATCH_GIT_URL_SSH"] || "git@github.com:your-org/certificates-ios.git")
 
 # TODO: 인증서 저장소의 브랜치명으로 교체하세요.
 git_branch(ENV["MATCH_GIT_BRANCH"] || "master")
@@ -29,16 +29,16 @@ type("appstore")
 # - App Store Connect 및 Apple Developer Identifiers에 등록된 앱 ID와 일치해야 합니다.
 # - 예: ["com.company.myapp", "com.company.myapp.beta", "com.company.myapp.dev"]
 app_identifier([
-  "dev.tuist.SwiftCICD",
-  "dev.tuist.SwiftCICD.beta",
-  "dev.tuist.SwiftCICD.dev"
+  ENV["APP_IDENTIFIER_RELEASE"] || "com.company.app",
+  ENV["APP_IDENTIFIER_BETA"] || "com.company.app.beta",
+  ENV["APP_IDENTIFIER_DEV"] || "com.company.app.dev"
 ])
 
 # TODO: Apple Developer Portal 로그인 이메일로 교체하거나 ENV로 바꾸세요.
 # - match가 Apple Developer Portal에 접근할 때 사용합니다.
 # - App Store Connect API Key와는 별개의 계정 정보입니다.
 # - 예: ENV["FASTLANE_APPLE_ID"] || "developer@company.com"
-username("sea15510@icloud.com")
+username(ENV["FASTLANE_APPLE_ID"] || "developer@example.com")
 
 # 해당 부분은 팀원들이 프로파일을 가져올때 사용할 명령어
 # fastlane match development --readonly

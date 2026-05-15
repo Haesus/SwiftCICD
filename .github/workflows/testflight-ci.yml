@@ -1,9 +1,10 @@
 name: TestFlight CI
 
 on:
-  push:
-    branches: [ "main" ]        # main에 머지되면 배포
-  workflow_dispatch:             # 수동 실행도 허용
+  # TODO: 초기 프로젝트 설정이 끝난 뒤 자동 배포가 필요하면 아래 push 트리거를 다시 활성화하세요.
+  # push:
+  #   branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   build-and-upload:
@@ -11,13 +12,21 @@ jobs:
     concurrency:
       group: testflight-ci
       cancel-in-progress: true
-    
+
     env:
       # TODO: App Store Connect API Key 정보를 GitHub Secrets에 등록하세요.
       ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
       ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
       ASC_API_KEY_BASE64: ${{ secrets.ASC_API_KEY_BASE64 }}
       API_BASE_URL: ${{ secrets.API_BASE_URL }}
+
+      # TODO: fastlane/Appfile, Fastfile, Matchfile에서 사용하는 프로젝트별 값을 GitHub Secrets에 등록하세요.
+      FASTLANE_APPLE_ID: ${{ secrets.FASTLANE_APPLE_ID }}
+      FASTLANE_ITC_TEAM_ID: ${{ secrets.FASTLANE_ITC_TEAM_ID }}
+      DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
+      APP_IDENTIFIER_RELEASE: ${{ secrets.APP_IDENTIFIER_RELEASE }}
+      APP_IDENTIFIER_BETA: ${{ secrets.APP_IDENTIFIER_BETA }}
+      APP_IDENTIFIER_DEV: ${{ secrets.APP_IDENTIFIER_DEV }}
 
       # TODO: fastlane match 인증서 저장소 접근 정보를 GitHub Secrets에 등록하세요.
       MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
@@ -84,8 +93,7 @@ jobs:
 
       - name: Setup Tuist
         run: |
-          mise install tuist@latest
-          mise use -g tuist@latest
+          mise install
           tuist version
 
       - name: Prepare xcconfig (BETA only)
@@ -105,8 +113,8 @@ jobs:
                 echo "API_BASE_URL = $SAFE_API_BASE_URL"
               } >> Xcconfig/Env.xcconfig
           fi
-          if [ -n "${{ secrets.DEVELOPMENT_TEAM }}" ]; then
-              sed -i '' "s/^DEVELOPMENT_TEAM *=.*/DEVELOPMENT_TEAM = ${{ secrets.DEVELOPMENT_TEAM }}/" \
+          if [ -n "$DEVELOPMENT_TEAM" ]; then
+              sed -i '' "s/^DEVELOPMENT_TEAM *=.*/DEVELOPMENT_TEAM = $DEVELOPMENT_TEAM/" \
               Xcconfig/Project/beta.xcconfig
           fi
 
@@ -135,7 +143,7 @@ jobs:
           ssh-keyscan github.com >> ~/.ssh/known_hosts
           # (선택) 연결 확인
           GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa" git ls-remote $MATCH_GIT_URL_SSH -h HEAD
-    
+
       - name: Fastlane Beta (Build & Upload)
         run: |
           bundle exec fastlane beta

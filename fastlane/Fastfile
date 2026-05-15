@@ -34,11 +34,11 @@ platform :ios do
     build_config = (ENV["TUIST_BUILD_CONFIG"] || "BETA").upcase
     case build_config
     when "DEV"
-      bundle_id = "dev.tuist.SwiftCICD.dev"
+      bundle_id = ENV["APP_IDENTIFIER_DEV"] || "com.company.app.dev"
     when "BETA"
-      bundle_id = "dev.tuist.SwiftCICD.beta"
+      bundle_id = ENV["APP_IDENTIFIER_BETA"] || "com.company.app.beta"
     when "RELEASE"
-      bundle_id = "dev.tuist.SwiftCICD"
+      bundle_id = ENV["APP_IDENTIFIER_RELEASE"] || "com.company.app"
     else
       UI.user_error!("Unsupported TUIST_BUILD_CONFIG: #{build_config}")
     end
